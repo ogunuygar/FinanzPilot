@@ -21,6 +21,10 @@ The app is designed to be hosted as a static website on GitHub Pages.
 
 After deployment, open `https://<your-github-username>.github.io/finanzpilot/` (replace `<your-github-username>` with the repository owner). The actual published address is shown in the repository’s **Settings → Pages** screen.
 
+## Budget category matching
+
+The Clothing budget includes both Clothing and Shopping & clothing entries. The Fuel budget includes both Fuel and Transport & fuel entries. Combined categories are counted in full because older entries do not distinguish their components. Existing records are preserved and recalculated automatically.
+
 ## Getting started
 
 1. Open the published GitHub Pages website.
@@ -78,7 +82,7 @@ Anyone can use the public website without an account. Each browser/app storage c
 
 ## Version
 
-Current release: **1.12.0**. See `version.json` for the release version used by the in-app update checker.
+Current release: **1.13.0**. See `version.json` for the release version used by the in-app update checker.
 
 ## License
 

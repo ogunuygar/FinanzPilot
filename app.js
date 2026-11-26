@@ -18,7 +18,7 @@ function validMonth(m){return typeof m==='string'&&/^\d{4}-(0[1-9]|1[0-2])$/.tes
 function validDate(d){return typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&validMonth(d.slice(0,7))&&+d.slice(-2)>=1&&dayFor(d.slice(0,7),+d.slice(-2))===d}
 function uid(){return globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)}
 function parseAmount(s){s=String(s).trim().replace(/\s|€/g,'');if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else s=s.replace(',','.');if(/^\.\d{1,2}$/.test(s))s='0'+s;if(/^\d+\.$/.test(s))s=s.slice(0,-1);if(!/^\d+(\.\d{1,2})?$/.test(s))return null;let n=Math.round(Number(s)*100);return Number.isSafeInteger(n)&&n>0&&n<=99999999999?n:null}
-const GROUPS=[{id:'food',name:'Food',icon:'🛒',cats:['food','restaurant'],limit:null,max:null},{id:'leisure',name:'Leisure',icon:'🎟️',cats:['leisure','entertainment'],limit:null},{id:'clothing',name:'Clothing',icon:'👕',cats:['clothing'],limit:null},{id:'tools',name:'Tools',icon:'🛠️',cats:['tools'],limit:null},{id:'fuel',name:'Fuel',icon:'⛽',cats:['fuel'],limit:null},{id:'gifts',name:'Gifts',icon:'🎁',cats:['gifts'],limit:null}];
+const GROUPS=[{id:'food',name:'Food',icon:'🛒',cats:['food','restaurant'],limit:null,max:null},{id:'leisure',name:'Leisure',icon:'🎟️',cats:['leisure','entertainment'],limit:null},{id:'clothing',name:'Clothing',icon:'👕',cats:['clothing','shopping'],limit:null},{id:'tools',name:'Tools',icon:'🛠️',cats:['tools'],limit:null},{id:'fuel',name:'Fuel',icon:'⛽',cats:['fuel','transport'],limit:null},{id:'gifts',name:'Gifts',icon:'🎁',cats:['gifts'],limit:null}];
 const fresh=()=>({version:1,transactions:[],rules:[],skipped:[],budgets:{},groupLimits:{},monthlyGroupLimits:{},goals:[],shoppingLists:[]});
 function cleanLimits(input){const out={};for(const g of GROUPS){if(!input||!Object.hasOwn(input,g.id))continue;const a=input[g.id];if(!a||typeof a!=='object')continue;const good=v=>v===null||(Number.isSafeInteger(v)&&v>0&&v<=99999999999);if(good(a.limit)&&good(a.max)&&(!a.max||!a.limit||a.max>=a.limit))out[g.id]={limit:a.limit,max:a.max};}return out}
 function groupLimit(g,m=month){return data.monthlyGroupLimits[m]?.[g.id]||data.groupLimits[g.id]||{limit:null,max:null}}
@@ -139,7 +139,7 @@ window.addEventListener('focus',render);document.addEventListener('visibilitycha
 
 
 // Release checks. Keep the release number in sync with version.json and asset URLs.
-const APP_VERSION = '1.12.0';
+const APP_VERSION = '1.13.0';
 let availableVersion = null;
 const versionParts = value => typeof value === 'string' && /^\d{1,6}\.\d{1,6}\.\d{1,6}$/.test(value) ? value.split('.').map(Number) : null;
 function isNewerVersion(candidate, current) {
