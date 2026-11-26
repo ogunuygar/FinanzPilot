@@ -10,6 +10,8 @@ A simple, mobile-first personal finance app to track daily expenses, manage mont
 - **Safe to spend:** Estimate how much you can spend per day within your remaining monthly budget.
 - **Savings goals:** Create personal savings targets and track your progress separately from expenses.
 - **Spending insights:** Explore daily and monthly spending charts and category breakdowns.
+- **Shopping:** Separate shopping lists, quantities, optional estimates, check-off items and record the actual checkout total once. Unchecked items stay on the list.
+- **Privacy:** Amounts are hidden at launch and when leaving the app. Tap the eye to reveal them. Optional six-digit PIN screen lock (one-minute inactivity or backgrounding). The PIN is not encryption.
 - **Backups:** Optional backup and restore or download a monthly spreadsheet from Settings.
 - **App updates:** Check for new releases directly from Settings.
 
@@ -61,7 +63,7 @@ Update the relevant source files and keep the version in `version.json`, the `AP
 
 FinanzPilot is local-first by design. Financial records are saved in browser `localStorage`, not sent to GitHub or a cloud database. No login, Firebase or cloud synchronization is required or planned. GitHub Pages hosts the public application files; the update checker requests only the public release metadata.
 
-Each browser profile and device has its own records. Clearing site data, private browsing, changing the site address or moving to another device can make records unavailable. Use JSON export/import to back up or manually transfer data. Backups contain personal financial information in plain text and should never be committed to a public repository. Local storage is not encrypted by the app.
+Each browser profile and device has its own records. Clearing site data, private browsing, changing the site address or moving to another device can make records unavailable. Use JSON export/import to back up or manually transfer data. Backups contain personal financial information in plain text and should never be committed to a public repository. Local storage is not encrypted by the app. The optional PIN uses a salted PBKDF2 verifier to lock the app interface, not to encrypt financial or shopping data. It is device-local and is not included in backups. Clearing site data removes the PIN and the records. Use your device lock for real protection. Shopping lists are included in backups.
 
 The first visit and update checks require internet. Once Settings reports offline access is ready, the app shell is cached for offline reopening. Browser storage and cached files can still be cleared or evicted by the device.
 
@@ -76,7 +78,7 @@ Anyone can use the public website without an account. Each browser/app storage c
 
 ## Version
 
-Current release: **1.11.0**. See `version.json` for the release version used by the in-app update checker.
+Current release: **1.12.0**. See `version.json` for the release version used by the in-app update checker.
 
 ## License
 
