@@ -1,5 +1,5 @@
 // Keep this release number in sync with app.js, version.json and index.html asset URLs.
-const RELEASE = '1.10.0';
+const RELEASE = '1.11.0';
 const base = new URL(self.registration.scope);
 const prefix = `finanzpilot-shell:${base.href}:`;
 const cacheName = prefix + RELEASE;

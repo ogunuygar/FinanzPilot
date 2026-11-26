@@ -4,13 +4,13 @@ A simple, mobile-first personal finance app to track daily expenses, manage mont
 
 ## Features
 
-- **Daily activity:** Quickly add income and expenses with automatic date and time, categories, and optional notes.
+- **Daily activity:** Quickly add income and expenses with automatic date and time, optional past purchase dates, day-by-day browsing, categories, and optional notes.
 - **Monthly budgets:** Set your own category limits, track spending percentages, and see warnings when approaching or exceeding a limit.
 - **Monthly payments:** Automatically record regular income and expenses, such as salary, rent, and subscriptions, when the app is opened.
 - **Safe to spend:** Estimate how much you can spend per day within your remaining monthly budget.
 - **Savings goals:** Create personal savings targets and track your progress separately from expenses.
 - **Spending insights:** Explore daily and monthly spending charts and category breakdowns.
-- **Backups:** Export and restore JSON backups or export monthly entries as CSV.
+- **Backups:** Optional backup and restore or download a monthly spreadsheet from Settings.
 - **App updates:** Check for new releases directly from Settings.
 
 ## Live app — GitHub Pages
@@ -76,7 +76,7 @@ Anyone can use the public website without an account. Each browser/app storage c
 
 ## Version
 
-Current release: **1.10.0**. See `version.json` for the release version used by the in-app update checker.
+Current release: **1.11.0**. See `version.json` for the release version used by the in-app update checker.
 
 ## License
 
