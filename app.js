@@ -89,7 +89,7 @@ window.addEventListener('focus',render);document.addEventListener('visibilitycha
 
 
 // Release checks. Keep the release number in sync with version.json and asset URLs.
-const APP_VERSION = '1.9.0';
+const APP_VERSION = '1.10.0';
 let availableVersion = null;
 const versionParts = value => typeof value === 'string' && /^\d{1,6}\.\d{1,6}\.\d{1,6}$/.test(value) ? value.split('.').map(Number) : null;
 function isNewerVersion(candidate, current) {
@@ -107,12 +107,25 @@ $('checkUpdate').addEventListener('click', async () => {
       status.textContent = 'Your data could not be saved. Download a backup before updating.';
       return;
     }
-    const url = new URL(window.location.href);
-    url.searchParams.set('v', availableVersion);
-    url.searchParams.set('_update', String(Date.now()));
     button.disabled = true;
-    status.textContent = 'Opening the new version…';
-    window.location.assign(url.href);
+    status.textContent = 'Preparing the new version…';
+    try {
+      if (pwaRegistration && navigator.serviceWorker.controller) {
+        await pwaRegistration.update();
+        const worker = await waitForRelease(pwaRegistration);
+        if (!worker) throw new Error('The new offline release is not ready yet.');
+        await activateRelease(worker);
+        window.location.reload();
+      } else {
+        const url = new URL(window.location.href);
+        url.searchParams.set('v', availableVersion);
+        url.searchParams.set('_update', String(Date.now()));
+        window.location.assign(url.href);
+      }
+    } catch (error) {
+      status.textContent = 'Update not ready. Your records are safe. Try again while online.';
+      button.disabled = false;
+    }
     return;
   }
   if (!/^https?:$/.test(location.protocol)) {
@@ -144,3 +157,54 @@ $('checkUpdate').addEventListener('click', async () => {
     button.disabled = false;
   }
 });
+
+// Installable, offline-first shell. Financial data remains in the original localStorage key.
+let pwaRegistration = null, installPrompt = null;
+const offlineStatus = $('offlineStatus');
+function waitForRelease(registration) {
+  return new Promise(resolve => {
+    const end = Date.now() + 15000;
+    const poll = () => {
+      if (registration.waiting) return resolve(registration.waiting);
+      if (Date.now() >= end) return resolve(null);
+      setTimeout(poll, 200);
+    };
+    poll();
+  });
+}
+function activateRelease(worker) {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => { cleanup(); reject(new Error('Activation timeout')); }, 15000);
+    const changed = () => { cleanup(); resolve(); };
+    function cleanup() { clearTimeout(timeout); navigator.serviceWorker.removeEventListener('controllerchange', changed); }
+    navigator.serviceWorker.addEventListener('controllerchange', changed);
+    worker.postMessage({type:'ACTIVATE_RELEASE'});
+  });
+}
+if ('serviceWorker' in navigator && window.isSecureContext) {
+  navigator.serviceWorker.register('./sw.js', {scope:'./', updateViaCache:'none'}).then(registration => {
+    pwaRegistration = registration;
+    return navigator.serviceWorker.ready;
+  }).then(() => {
+    offlineStatus.textContent = 'Offline access is ready. You can reopen the app without internet.';
+  }).catch(() => {
+    offlineStatus.textContent = 'Offline access could not be prepared. Open the website while online and try again.';
+  });
+} else {
+  offlineStatus.textContent = 'Open the HTTPS website in your browser to enable offline access.';
+}
+const installed = () => {
+  $('installApp').hidden = true;
+  $('installHint').textContent = 'FinanzPilot is installed on this device.';
+};
+if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) installed();
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault(); installPrompt = event; $('installApp').hidden = false;
+});
+$('installApp').addEventListener('click', async () => {
+  if (!installPrompt) return;
+  const prompt = installPrompt; installPrompt = null;
+  $('installApp').hidden = true;
+  try { await prompt.prompt(); await prompt.userChoice; } catch (_) { /* Manual install instructions remain available. */ }
+});
+window.addEventListener('appinstalled', installed);

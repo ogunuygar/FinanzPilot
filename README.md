@@ -35,6 +35,9 @@ finanzpilot/
 ├── style.css       # Responsive design
 ├── app.js          # App logic and local storage
 ├── version.json    # Release version for update checks
+├── manifest.webmanifest # Installable app metadata
+├── sw.js           # Offline app shell
+├── icons/          # Home screen icons
 └── README.md       # Project documentation
 ```
 
@@ -42,7 +45,7 @@ Built with HTML, CSS, and vanilla JavaScript. No external libraries or build too
 
 ## Deployment
 
-1. Upload the five project files to the root of the public `finanzpilot` repository.
+1. Upload all project files and the `icons/` directory to the root of the public `finanzpilot` repository.
 2. Open **Settings → Pages → Build and deployment**.
 3. Under **Source**, select **Deploy from a branch**.
 4. Choose `main` and `/ (root)`, then click **Save**.
@@ -52,7 +55,7 @@ No server, database, Firebase project, account or build step is required.
 
 ### Publishing updates
 
-Update the relevant source files and keep the version in `version.json`, the `APP_VERSION` constant in `app.js`, and the asset version query strings in `index.html` in sync. Commit to `main`. Once GitHub Pages has deployed the release, use **Settings → Check for updates** in the app. Updates do not intentionally clear local records.
+Update the relevant source files and keep the version in `version.json`, the `APP_VERSION` constant in `app.js`, the `RELEASE` constant in `sw.js`, and the asset version query strings in `index.html` in sync. Commit to `main`. Once GitHub Pages has deployed the release, use **Settings → Check for updates** in the app. Updates do not intentionally clear local records.
 
 ## Privacy and storage
 
@@ -60,18 +63,20 @@ FinanzPilot is local-first by design. Financial records are saved in browser `lo
 
 Each browser profile and device has its own records. Clearing site data, private browsing, changing the site address or moving to another device can make records unavailable. Use JSON export/import to back up or manually transfer data. Backups contain personal financial information in plain text and should never be committed to a public repository. Local storage is not encrypted by the app.
 
-The published website requires internet access to load its files and check updates. Guaranteed offline reopening and installation are planned as part of future PWA support.
+The first visit and update checks require internet. Once Settings reports offline access is ready, the app shell is cached for offline reopening. Browser storage and cached files can still be cleared or evicted by the device.
 
 Safe to spend is a budget estimate, not a live bank balance.
 
-## Roadmap
+## Install on your phone
 
-- Installable mobile experience (PWA)
-- Mobile app icon and offline app shell
+- **iPhone:** Open the published URL in Safari, use Share → Add to Home Screen, then open the home screen icon while online. Check Settings for offline readiness.
+- **Android:** Open the URL in Chrome, choose Install app or Add to Home screen from the menu (or use Settings → Install when offered), and open it while online.
+
+Anyone can use the public website without an account. Each browser/app storage context is separate. On some phones, a newly installed web app may not inherit records from the browser; export a JSON backup before installation and restore it if needed. No financial data is shared between users. Updates are distributed through GitHub Pages; review changes before publishing. Do not upload personal backup files.
 
 ## Version
 
-Current release: **1.9.0**. See `version.json` for the release version used by the in-app update checker.
+Current release: **1.10.0**. See `version.json` for the release version used by the in-app update checker.
 
 ## License
 
